@@ -22,25 +22,25 @@ namespace PluginName;
  */
 class Plugin_Name_Uninstaller {
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    2.0.0
-	 */
-	public static function uninstall() {
+  /**
+   * Short Description. (use period)
+   *
+   * Long Description.
+   *
+   * @since    2.0.0
+   */
+  public static function uninstall() {
 
-		// checks to make sure Wordpress is the one requesting the uninstall
-		if (!defined('WP_UNINSTALL_PLUGIN')) {
-			die;
-		}
+    // checks to make sure Wordpress is the one requesting the uninstall
+    if (!defined('WP_UNINSTALL_PLUGIN')) {
+      die;
+    }
 
-		/*
-		 * Delete our internally stored data variables
-		 */
-		delete_site_option('plugin-name-activated-version');
+    /*
+     * Delete our internally stored data variables
+     */
+    delete_site_option('plugin-name-activated-version');
 
-	}
+  }
 
 }
