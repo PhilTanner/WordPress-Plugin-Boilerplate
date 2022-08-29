@@ -22,7 +22,7 @@ class Phil_Tanner_Admin {
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
-	private $version = "1.0.2";
+	private $version = "1.0.3";
 
 
 	/**
@@ -36,12 +36,12 @@ class Phil_Tanner_Admin {
 	public function get_additional_args_for_inputs( $args ){
 		// This is the name as set by register_setting()->option_name
 		if( !isset( $args['option-name'] ) ){
-			$error = new WP_Error( 'admin', __('Missing required "option-name" argument required for saving info.', 'Phil_Tanner_Admin' ));
-			throw new Exception(__('Missing required "option-name" argument required for saving info.','Phil_Tanner_Admin'));
+			$error = new \WP_Error( 'admin', __('Missing required "option-name" argument required for saving info.', 'Phil_Tanner_Admin' ));
+			throw new \Exception(__('Missing required "option-name" argument required for saving info.','Phil_Tanner_Admin'));
 		}
 		if( !isset( $args['name'] ) ){
-			$error = new WP_Error( 'admin', __('Missing required "name" argument required for saving info.', 'Phil_Tanner_Admin' ));
-			throw new Exception(__('Missing required "name" argument required for saving info.','Phil_Tanner_Admin'));
+			$error = new \WP_Error( 'admin', __('Missing required "name" argument required for saving info.', 'Phil_Tanner_Admin' ));
+			throw new \Exception(__('Missing required "name" argument required for saving info.','Phil_Tanner_Admin'));
 		}
 		// We're always going to include the ID & name attributes
 		$additionalargs = ' id="'.$args['name'].'"';
@@ -64,6 +64,8 @@ class Phil_Tanner_Admin {
 				case "autofocus":
 				case "disabled":
 				case "readonly":
+				case "multiple":
+				case "autofocus":
 					$additionalargs .= ' '.esc_attr($name);
 					break;
 				case "multiple": // Multiple selects need a different argument name format...
@@ -72,7 +74,15 @@ class Phil_Tanner_Admin {
 					break;
 				// These are numerical arguments.
 				case "step":
+				//case "min": // These can also be dates.
+				//case "max": // These can also be dates.
 					$additionalargs .= ' '.esc_attr($name).'="'.(float)$val.'"';
+					break;
+				// These are integer arguments.
+				case "size":
+				case "maxlength":
+				case "max":
+					$additionalargs .= ' '.esc_attr($name).'="'.(int)$val.'"';
 					break;
 				// These are URLs, so they need a different value escape.
 				case "src":
@@ -105,11 +115,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-				echo sprintf(
-					'<p class="description" id="%s-description">%s</p>',
-					esc_attr($args['name']),
-					$args['description']
-				);
+			echo sprintf(
+				'<p class="description" id="%s-description">%s</p>',
+				esc_attr($args['name']),
+				$args['description']
+			);
 		}
 	}
 
@@ -132,11 +142,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-        echo sprintf(
-          '<p class="description" id="%s-description">%s</p>',
-          esc_attr($args['name']),
-          $args['description']
-        );
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        esc_attr($args['name']),
+        $args['description']
+      );
     }
   }
 
@@ -159,11 +169,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-        echo sprintf(
-          '<p class="description" id="%s-description">%s</p>',
-          esc_attr($args['name']),
-          $args['description']
-        );
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        esc_attr($args['name']),
+        $args['description']
+      );
     }
   }
 
@@ -183,11 +193,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-        echo sprintf(
-          '<p class="description" id="%s-description">%s</p>',
-          esc_attr($args['name']),
-          $args['description']
-        );
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        esc_attr($args['name']),
+        $args['description']
+      );
     }
   }
 
@@ -210,11 +220,11 @@ class Phil_Tanner_Admin {
 			$this->get_additional_args_for_inputs( $args ),
 		);
 		if( array_key_exists( 'description', $args ) ){
-				echo sprintf(
-					'<p class="description" id="%s-description">%s</p>',
-					esc_attr($args['name']),
-					$args['description']
-				);
+			echo sprintf(
+				'<p class="description" id="%s-description">%s</p>',
+				esc_attr($args['name']),
+				$args['description']
+			);
 		}
 	}
 
@@ -237,11 +247,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-        echo sprintf(
-          '<p class="description" id="%s-description">%s</p>',
-          esc_attr($args['name']),
-          $args['description']
-        );
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        esc_attr($args['name']),
+        $args['description']
+      );
     }
   }
 
@@ -285,11 +295,11 @@ class Phil_Tanner_Admin {
 			array_key_exists( 'description', $args )
 			&& trim($args['description'])
 		){
-        echo sprintf(
-          '<p class="description" id="%s-description">%s</p>',
-          esc_attr($args['name']),
-          $args['description']
-        );
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        esc_attr($args['name']),
+        $args['description']
+      );
     }
   }
 
@@ -393,7 +403,7 @@ class Phil_Tanner_Admin {
 			if( count($m) < 2 ) {
 				return false;
 			}
-			return substr( $m[1][0], 0, -4);
+			return substr( $m[1][0], 0, -4); // Trim the ".git" from the end.
 		}
 	}
 
