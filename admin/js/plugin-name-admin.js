@@ -29,4 +29,13 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	 (function( $ ) {
+	 	'use strict';
+
+	   $( window ).load(function() {
+	  	  jQuery("div.wrap.plugin_name form").dirty({preventLeaving: true});
+	   });
+
+	 })( jQuery );
+
 })( jQuery );

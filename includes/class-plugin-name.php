@@ -1,5 +1,5 @@
 <?php
-
+namespace PluginName;
 /**
  * The file that defines the core plugin class
  *
@@ -72,7 +72,7 @@ class Plugin_Name {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'plugin-name';
+		$this->plugin_name = PLUGIN_NAME_TEXT_DOMAIN;
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -104,6 +104,16 @@ class Plugin_Name {
 		 * core plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-loader.php';
+
+		/**
+		 * The class responsible for orchestrating the activation of the plugin
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-activator.php';
+
+		/**
+		 * The class responsible for orchestrating the deactivation of the plugin
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-deactivator.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -154,9 +164,16 @@ class Plugin_Name {
 
 		$plugin_admin = new Plugin_Name_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_scripts' );
 
+		$this->loader->add_action( 'admin_init',            $plugin_admin,     'register_admin_input_fields' );
+
+		$this->loader->add_action( 'admin_notices',         $plugin_admin,     'admin_notices' );
+		$this->loader->add_action( 'upload_dir',            $plugin_admin,     'fix_upload_path_for_ssl' );
+
+		$plugin_activator = new Plugin_Name_Activator();
+		$this->loader->add_action( 'admin_init',            $plugin_activator, 'check_for_plugin_changes' );
 	}
 
 	/**

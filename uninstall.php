@@ -1,5 +1,5 @@
 <?php
-
+namespace PluginName;
 /**
  * Fired when the plugin is uninstalled.
  *
@@ -29,3 +29,7 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+
+require_once 'includes/class-plugin-name-uninstaller.php';
+Plugin_Name_Uninstaller::uninstall();
