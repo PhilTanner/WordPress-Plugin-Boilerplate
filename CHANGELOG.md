@@ -1,4 +1,8 @@
-# Plugin Name Boilerplate changes
+# Plugin_Name Boilerplate changes
+## v2.0.1
+* Migrated the Plugin list filters into the admin class where I always go looking for them (as they only run in admin area).
+* Changed tabs into spaces.
+
 ## v2.0.0
 * Namespaced the classes
 * Added function to retrieve the git repo URL for dynamic updating in plugin description.

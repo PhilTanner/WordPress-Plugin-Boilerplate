@@ -168,4 +168,77 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
     }
   }
 
+  /**
+   * Add some additional links underneath our plugin description,
+   * linking back to the editor page
+   *
+   * @since   2.0.0
+   * @access  public
+   * @param   array       $links_array            An array of the plugin's metadata
+   * @param   string      $plugin_file_name       Path to the plugin file
+   * @param   array       $plugin_data            An array of plugin data
+   * @param   string      $status                 Status of the plugin
+   * @return  array       $links_array
+   */
+  public function plugin_name_links( $links_array, $plugin_file_name, $plugin_data, $status ){
+
+    if( PLUGIN_NAME_TEXT_DOMAIN.".php" === basename($plugin_file_name) ){
+      // Tack our Github branch onto the Version number (only works when plugin is activated, obviously)
+      $git_branch = Phil_Tanner_Admin::get_git_branch();
+      $git_repo   = Phil_Tanner_Admin::get_git_repo_url();
+      $git_hash   = Phil_Tanner_Admin::get_git_commit_hash();
+      $git_date   = Phil_Tanner_Admin::get_git_commit_date();
+
+      if(
+        $git_branch
+        && $git_repo
+        && $git_hash
+        && $git_date
+      ){
+        $links_array[0] .= ' ('.sprintf(
+          __(
+            'Git Branch: '.
+            '<a href="%s" target="_blank">%s<span class="dashicons-before dashicons-external"></span></a> '.
+            '(Commit: <a href="%s" target="_blank">#%s, %s<span class="dashicons-before dashicons-external"></span></a>)',
+            PLUGIN_NAME_TEXT_DOMAIN
+          ),
+          $git_repo.'/tree/'.$git_branch,
+          $git_branch,
+          $git_repo.'/commit/'.$git_hash,
+          substr( $git_hash, 0, 8),
+          Phil_Tanner_Admin::print_wp_local_date_from( $git_date, get_option( 'date_format' ) )
+        ) .')';
+      }
+    }
+
+    return $links_array;
+  }
+
+
+  /**
+   * Add a Settings link to the "plugin deactivate" area.
+   *
+   * @since   2.0.0
+   * @access  public
+   * @param   array       $links_array            An array of the plugin's metadata
+   * @param   string      $plugin_file_name       Path to the plugin file
+   * @param   array       $plugin_data            An array of plugin data
+   * @param   string      $status                 Status of the plugin
+   * @return  array       $links_array
+  */
+  function plugin_name_action_links( $links_array, $plugin_file_name, $plugin_data, $status ){
+    if( PLUGIN_NAME_TEXT_DOMAIN.".php" === basename($plugin_file_name) ){
+      $settings_url = esc_url(
+        add_query_arg(
+          'page',
+          'plugin_name-menu_admin', // Note - this needs to match the Menu Slug in admin/class-plugin-name-admin.php->add_menu_links()
+          admin_url( 'admin.php' )
+        )
+      );
+      // Using array_unshift to put it first in the array (before Deactivate) (unlike plugin_name_links above )
+      array_unshift( $links_array, '<a href="'.$settings_url.'">'.__("Settings", PLUGIN_NAME_TEXT_DOMAIN).'</a>' );
+    }
+    return $links_array;
+  }
+
 }

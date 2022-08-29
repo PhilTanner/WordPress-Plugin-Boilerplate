@@ -172,6 +172,9 @@ class Plugin_Name {
     $this->loader->add_action( 'admin_notices',         $plugin_admin,     'admin_notices' );
     $this->loader->add_action( 'upload_dir',            $plugin_admin,     'fix_upload_path_for_ssl' );
 
+    $this->loader->add_filter( 'plugin_row_meta',       $plugin_admin,     'plugin_name_links', 10, 4 );
+    $this->loader->add_filter( 'plugin_action_links',   $plugin_admin,     'plugin_name_action_links', 10, 4 );
+
     $plugin_activator = new Plugin_Name_Activator();
     $this->loader->add_action( 'admin_init',            $plugin_activator, 'check_for_plugin_changes' );
   }
