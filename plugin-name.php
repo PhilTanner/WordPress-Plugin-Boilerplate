@@ -15,7 +15,7 @@
  * Plugin Name:       WordPress Plugin Boilerplate
  * Plugin URI:        http://example.com/plugin-name-uri/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Author:            Your Name or Your Company
  * Author URI:        http://example.com/
  * License:           GPL-2.0+
@@ -102,7 +102,7 @@ switch( $_SERVER['SERVER_NAME'] ) {
  */
 function activate_plugin_name() {
   require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-activator.php';
-  PluginName\Plugin_Name_Activator::activate();
+  Plugin_Name\Plugin_Name_Activator::activate();
 }
 register_activation_hook( __FILE__, 'activate_plugin_name' );
 
@@ -112,7 +112,7 @@ register_activation_hook( __FILE__, 'activate_plugin_name' );
  */
 function deactivate_plugin_name() {
   require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-deactivator.php';
-  PluginName\Plugin_Name_Deactivator::deactivate();
+  Plugin_Name\Plugin_Name_Deactivator::deactivate();
 }
 register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
 
@@ -133,7 +133,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
  */
 function run_plugin_name() {
 
-  $plugin = new PluginName\Plugin_Name();
+  $plugin = new Plugin_Name\Plugin_Name();
   $plugin->run();
 
 }

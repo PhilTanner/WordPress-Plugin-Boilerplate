@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 
 /**
  * The public-facing functionality of the plugin.
@@ -42,6 +42,15 @@ class Plugin_Name_Public {
   private $version;
 
   /**
+   * The user entered options of this plugin.
+   *
+   * @since    2.0.3
+   * @access   private
+   * @var      array    $options    A named array of options & values entered in the admin page.
+   */
+  private $options;
+
+  /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
@@ -51,8 +60,13 @@ class Plugin_Name_Public {
   public function __construct( $plugin_name, $version ) {
 
     $this->plugin_name = $plugin_name;
-    $this->version = $version;
+    $this->version     = $version;
 
+    $this->options     = array_merge(
+      // Repeat this next line for all option values you might use
+			(array)get_site_option( 'plugin-name-options', array() ),
+			array(),
+		);
   }
 
   /**

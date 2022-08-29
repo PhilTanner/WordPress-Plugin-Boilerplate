@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 
 /**
  * Standardised admin functions for plugin development.
@@ -22,7 +22,7 @@ class Phil_Tanner_Admin {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version = "1.0.4";
+  private $version = "1.0.5";
 
 
   /**
@@ -64,7 +64,6 @@ class Phil_Tanner_Admin {
         case "autofocus":
         case "disabled":
         case "readonly":
-        case "multiple":
         case "autofocus":
           $additionalargs .= ' '.esc_attr($name);
           break;

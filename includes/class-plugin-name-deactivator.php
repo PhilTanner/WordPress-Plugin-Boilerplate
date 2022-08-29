@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 /**
  * Fired during plugin deactivation
  *

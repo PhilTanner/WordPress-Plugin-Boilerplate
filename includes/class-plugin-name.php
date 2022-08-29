@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 /**
  * The file that defines the core plugin class
  *
@@ -167,7 +167,9 @@ class Plugin_Name {
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_styles' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_scripts' );
 
-    $this->loader->add_action( 'admin_init',            $plugin_admin,     'register_admin_input_fields' );
+    $this->loader->add_action( 'admin_menu',            $plugin_admin,     'add_menu_links' );
+
+    $this->loader->add_action( 'admin_init',            $plugin_admin,     'register_options_input_fields' );
 
     $this->loader->add_action( 'admin_notices',         $plugin_admin,     'admin_notices' );
     $this->loader->add_action( 'upload_dir',            $plugin_admin,     'fix_upload_path_for_ssl' );

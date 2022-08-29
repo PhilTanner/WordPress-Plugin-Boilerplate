@@ -1,4 +1,9 @@
 # Plugin_Name Boilerplate changes
+## v2.0.2
+* Changed Namespace to allow find/replace renaming as per Readme.md instructions.
+* Patched correct handling of multiple select handling in `Phil_Tanner_Admin()`.
+* Example admin page added, with example option values.
+
 ## v2.0.1
 * Migrated the Plugin list filters into the admin class where I always go looking for them (as they only run in admin area).
 * Changed tabs into spaces.
@@ -7,7 +12,7 @@
 * Namespaced the classes
 * Added function to retrieve the git repo URL for dynamic updating in plugin description.
 * Added shortcodes to the loader
-* Included the `PluginName\Phil_Tanner_Admin()` class
+* Included the `Plugin_Name\Phil_Tanner_Admin()` class
   * simplify WordPress admin settings inputs.
   * provide git info
   * fix SSL upload paths

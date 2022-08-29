@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 /**
  * Fired during plugin uninstall
  *
@@ -40,6 +40,11 @@ class Plugin_Name_Uninstaller {
      * Delete our internally stored data variables
      */
     delete_site_option('plugin-name-activated-version');
+
+    /*
+		 * Delete our site options from the admin tool. Repeat next line for each option group created.
+		 */
+		delete_site_option('plugin-name-options');
 
   }
 

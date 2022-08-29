@@ -1,5 +1,5 @@
 <?php
-namespace PluginName;
+namespace Plugin_Name;
 require_once 'class-phil-tanner-admin.php';
 
 /**
@@ -43,6 +43,15 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
   private $version;
 
   /**
+   * The user entered options of this plugin.
+   *
+   * @since    2.0.3
+   * @access   private
+   * @var      array    $options    A named array of options & values entered in the admin page.
+   */
+  private $options;
+
+  /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
@@ -53,6 +62,12 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
 
     $this->plugin_name = $plugin_name;
     $this->version = $version;
+
+    $this->options = array_merge(
+      // Repeat this next line for all option values you might use
+			(array)get_site_option( 'plugin-name-options', array() ),
+			array(),
+		);
 
   }
 
@@ -117,11 +132,11 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
    * Display any error messages we've registered in our plugin on any admin page.
    *
    * See https://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices
-    * and https://developer.wordpress.org/reference/hooks/admin_notices/
+   * and https://developer.wordpress.org/reference/hooks/admin_notices/
    *
    * @since    2.0.0
    */
-  public function admin_notices(){
+  public function admin_notices() {
     global $plugin_name_plugin_data;
 
     // These notices will be seen by website admins.
@@ -160,13 +175,197 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
    *
    * @since    2.0.0
    */
-  static function print_section_info( $args ){
+  static function print_section_info( $args ) {
+    global $plugin_name_plugin_data;
+
     switch( $args['id'] ){
-      case 'plugin-name-options-section':
-        echo '<p>'. __('General settings for the Plugin Name plugin.', PLUGIN_NAME_TEXT_DOMAIN ).'</p>';
+      case 'plugin-name-options_section':
+        echo '<p>'. sprintf( __('General settings for the %s plugin.', PLUGIN_NAME_TEXT_DOMAIN ), $plugin_name_plugin_data['PluginName'] ).'</p>';
         break;
     }
   }
+
+  /**
+   * Creates the dashboard menu item links.
+   *
+   * @since    2.0.2
+   */
+  public function add_menu_links() {
+    // This will be our own Admin menu item
+    $hook = add_menu_page(
+      __("Plugin Settings", PLUGIN_NAME_TEXT_DOMAIN), // Tab title text
+      __("Plugin Settings", PLUGIN_NAME_TEXT_DOMAIN),  // Menu item text
+      "manage_options", // Capability required to see link/access page (Admin: https://wordpress.org/support/article/roles-and-capabilities/#administrator)
+      "plugin-name-menu_admin", // Menu slug (unique name)
+      array( $this, "admin_page_display" ), // Function to be called when displaying content
+      'dashicons-admin-settings', // https://developer.wordpress.org/resource/dashicons/#admin-settings
+      72 // https://developer.wordpress.org/reference/functions/add_menu_page/#default-bottom-of-menu-structure
+    );
+
+    /*
+    // Add Submenu pages
+    if( $hook ){
+      add_submenu_page(
+        'plugin-name-menu_admin', // Parent menu slug (above)
+        __('Other settings', PLUGIN_NAME_TEXT_DOMAIN // Tab title
+        __('Other settings', PLUGIN_NAME_TEXT_DOMAIN), // Menu title
+        'manage_categories', // Capability needed to access (Editor)
+        'plugin-name-sub-settings-menu-1', // Menu slug
+        array( $this, 'admin_page_display_other' ), // Callback for output of the page
+        null // Optional position in menu - default is to output in the order they're defined
+      );
+    }
+    */
+  }
+
+  /**
+   * Settings page display callback for main options, called by menu item.
+   *
+   * @since    2.0.2
+   */
+  public function admin_page_display() {
+    global $plugin_name_plugin_data;
+
+    echo '<div class="wrap plugin_name">';
+    echo '  <h1>' . $plugin_name_plugin_data['PluginName'] . '</h1>';
+    echo '  <h2>';
+    echo sprintf(
+      __("Version %s", PLUGIN_NAME_TEXT_DOMAIN),
+      get_option('plugin-name-activated-version', $plugin_name_plugin_data['Version'])
+    );
+
+    $git_branch = Phil_Tanner_Admin::get_git_branch();
+    $git_repo   = Phil_Tanner_Admin::get_git_repo_url();
+    $git_hash   = Phil_Tanner_Admin::get_git_commit_hash();
+    $git_date   = Phil_Tanner_Admin::get_git_commit_date();
+
+    echo ' <span style="font-size:80%">(';
+    if(
+      $git_branch
+      && $git_repo
+      && $git_hash
+      && $git_date
+    ){
+      echo sprintf(
+        __(
+          'Git Branch: <em>'.
+          '<a href="%s" target="_blank">%s<span class="dashicons-before dashicons-external"></span></a> '.
+          '(Commit: <a href="%s" target="_blank">#%s, %s<span class="dashicons-before dashicons-external"></span></a>)</em>, ',
+          PLUGIN_NAME_TEXT_DOMAIN
+        ),
+        $git_repo.'/tree/'.$git_branch,
+        $git_branch,
+        $git_repo.'/commit/'.$git_hash,
+        substr( $git_hash, 0, 8),
+        Phil_Tanner_Admin::print_wp_local_date_from( $git_date )
+      );
+    }
+
+    echo sprintf(
+      __('WordPress Environment: <em>%s</em>',PLUGIN_NAME_TEXT_DOMAIN),
+      WP_ENVIRONMENT_TYPE
+    );
+    echo ')</span>';
+    echo "</h2>";
+
+    if( current_user_can( "manage_options" ) ) {
+      echo '  <form method="post" action="options.php" id="plugin_name_admin_settings">';
+      settings_fields( 'plugin-name-options_group' );
+      do_settings_sections( 'plugin-name-options_fields' );
+      submit_button();
+      echo '  </form>';
+    } else {
+      echo '<p>'.__("You must be an administrator to edit these settings.", PLUGIN_NAME_TEXT_DOMAIN).'</p>';
+    }
+
+    echo '</div>';
+  }
+
+  /**
+   * Create the WordPress options settings for our plugin.
+   *
+   * Values will be saved into the wp_options table with the $wp_options_name
+   * key.
+   * This function needs to have been registered with an admin_init action.
+   *
+   * @since    2.0.2
+   */
+  public function register_options_input_fields() {
+    global $plugin_name_plugin_data;
+
+    $wp_options_name = 'plugin-name-options';
+
+    /**
+     * We're creating a setting group to syntactically tie them all together.
+     */
+    register_setting(
+      $wp_options_name.'_group',
+      $wp_options_name,
+      array(
+        'type'        => 'string',
+        'description' => sprintf( __( 'Settings for the %s plugin.', PLUGIN_NAME_TEXT_DOMAIN ), $plugin_name_plugin_data['PluginName'] ),
+      )
+    );
+
+    add_settings_section(
+      $wp_options_name.'_section',
+      sprintf( __('Administrator settings for the %s plugin',PLUGIN_NAME_TEXT_DOMAIN), $plugin_name_plugin_data['PluginName'] ),
+      array( $this, 'print_section_info' ), // Print out a description at the top of the page, under the h1.
+      $wp_options_name.'_fields'
+    );
+
+    // Example fields:
+    add_settings_field(
+      'number_value', // Field name that we'll use to access this value.
+      __('Enter a number between 1 and 10 (inclusive)',PLUGIN_NAME_TEXT_DOMAIN),
+      array( $this, 'print_number_input' ), // What function will output the input field. These are stored in the Phil_Tanner_Admin() class.
+      $wp_options_name.'_fields', // Which bit to output into when you call do_settings_sections() function.
+      $wp_options_name.'_section', // THe section above we want to display in.
+      array(
+        'name'              => 'number_value', // Should match the first arg of this function.
+        'description'       => __('An optional argument containing a bit more information to display under the input box.', PLUGIN_NAME_TEXT_DOMAIN),
+        'option-name'       => $wp_options_name, // Where we're going to store the data.
+        'sanitize_callback' => 'intval', // How do we escape user data entered here? Other options include floatval, sanitize_text_field, sanitize_textarea_field, sanitize_url, sanitize_hex_color
+        'min'               => 1,
+        'max'               => 10,
+        'step'              => 1,
+        // Any other arguments you want to pass to the input field HTML go here.
+      )
+    );
+    add_settings_field(
+      'url_value',
+      __('Favourite website?',PLUGIN_NAME_TEXT_DOMAIN),
+      array( $this, 'print_url_input' ),
+      $wp_options_name.'_fields',
+      $wp_options_name.'_section',
+      array(
+        'name'              => 'url_value',
+        'option-name'       => $wp_options_name,
+        'sanitize_callback' => 'sanitize_url',
+        'required'          => 'required',
+      )
+    );
+    add_settings_field(
+      'select_field',
+      __('Pick a direction',PLUGIN_NAME_TEXT_DOMAIN),
+      array( $this, 'print_select_input' ),
+      $wp_options_name.'_fields',
+      $wp_options_name.'_section',
+      array(
+        'name'              => 'select_field',
+        'option-name'       => $wp_options_name,
+        'sanitize_callback' => 'sanitize_text_field',
+        'options'           => array(
+                                array( 'value' => 'north', 'name' => __('North', PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'east',  'name' => __('East',  PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'south', 'name' => __('South', PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'west',  'name' => __('West',  PLUGIN_NAME_TEXT_DOMAIN) ),
+                              ),
+        'multiple'          => 'multiple', // include this to pick more than one select item.
+      )
+    );
+  }
+
 
   /**
    * Add some additional links underneath our plugin description,
