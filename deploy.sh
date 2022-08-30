@@ -2,7 +2,7 @@
 # A modification of Sal Ferrarello's deploy script as found here: https://github.com/salcode/stop-emails/blob/master/deploy.sh
 
 # main config
-PLUGINSLUG="plugin_name" # Used for main plugin filename, as well as SVN repo link.
+PLUGINSLUG="plugin-name" # Used for main plugin filename, as well as SVN repo link.
 CURRENTDIR=`pwd`
 MAINFILE="$PLUGINSLUG.php" # this should be the name of your main php file in the wordpress plugin
 
