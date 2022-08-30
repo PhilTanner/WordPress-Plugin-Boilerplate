@@ -45,10 +45,10 @@ class Plugin_Name_Public {
    * The user entered options of this plugin.
    *
    * @since    2.0.3
-   * @access   private
+   * @access   protected
    * @var      array    $options    A named array of options & values entered in the admin page.
    */
-  private $options;
+  protected $options;
 
   /**
    * Initialize the class and set its properties.
@@ -64,9 +64,9 @@ class Plugin_Name_Public {
 
     $this->options     = array_merge(
       // Repeat this next line for all option values you might use
-			(array)get_site_option( 'plugin-name-options', array() ),
-			array(),
-		);
+      (array)get_site_option( 'plugin-name-options', array() ),
+      array(),
+    );
   }
 
   /**

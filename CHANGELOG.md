@@ -1,4 +1,13 @@
 # Plugin_Name Boilerplate changes
+## v2.0.3
+* Changed plugin options property to protected to allow interaction with `Phil_Tanner_Admin()` class.
+* Included example `label_for` value in form fields to output labels for settings fields for better accessibility.
+* Included an example of how to use `placeholder` argument.
+* Automatic highlighting of required fields in plugin settings pages using CSS.
+* Tidied up admin tool JavaScript (mishashed copy/paste).
+* Fixed activated plugin version option being saved to correctly store value.
+* More tabs vs spaces patching.
+
 ## v2.0.2
 * Changed Namespace to allow find/replace renaming as per Readme.md instructions.
 * Patched correct handling of multiple select handling in `Phil_Tanner_Admin()`.

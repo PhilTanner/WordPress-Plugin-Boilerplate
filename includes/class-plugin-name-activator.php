@@ -33,7 +33,7 @@ class Plugin_Name_Activator {
     global $plugin_name_plugin_data;
 
     // Grab our currently installed version from the DB.
-    $installed_version = get_site_option('plugin-name-activated-version', get_site_option('plugin-name-activated_version', 0) );
+    $installed_version = get_site_option('plugin-name-activated-version', 0 );
 
     // Our currently installed version is less than our version - so do some stuff.
     if( version_compare( $installed_version, PLUGIN_NAME_VERSION, "<" ) ){
@@ -48,7 +48,7 @@ class Plugin_Name_Activator {
        * }
        */
 
-      update_site_option( 'plugin-name-activated-version', PLUGIN_NAME_TEXT_DOMAIN );
+      update_site_option( 'plugin-name-activated-version', PLUGIN_NAME_VERSION );
       add_settings_error(
         PLUGIN_NAME_TEXT_DOMAIN, // Slug of the setting which we're generating the error for
         'plugin-updated', // slug name of the code of this particular error

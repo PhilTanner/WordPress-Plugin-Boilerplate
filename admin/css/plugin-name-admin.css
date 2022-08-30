@@ -2,3 +2,32 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+
+/**
+ * Highlight our required form fields in the admin area
+ */
+
+/* Style our required input/select/textarea/whatever fields themselves so they're obvious */
+div.wrap.plugin_name form [required] {
+  border-color: red;
+  color:maroon;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.25);
+  background-color: peachpuff;
+  font-weight:bold;
+}
+/* Make the preceeding TH element stand out if there's a required form field in that row */
+div.wrap.plugin_name form tr:has([required]) th,
+div.wrap.plugin_name form tr:has([required]) th label {
+  color: red;
+  font-weight: bolder;
+  font-style:italic;
+}
+/* Drop an asterisk after the input field as well */
+div.wrap.plugin_name form tr:has([required]) th::before,
+div.wrap.plugin_name form tr:has([required]) td::before {
+  content: '* ';
+  font-weight: bold;
+  color:red;
+  vertical-align: top;
+}

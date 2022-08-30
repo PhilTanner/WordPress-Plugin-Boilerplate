@@ -46,10 +46,10 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
    * The user entered options of this plugin.
    *
    * @since    2.0.3
-   * @access   private
+   * @access   protected
    * @var      array    $options    A named array of options & values entered in the admin page.
    */
-  private $options;
+  protected $options;
 
   /**
    * Initialize the class and set its properties.
@@ -65,9 +65,9 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
 
     $this->options = array_merge(
       // Repeat this next line for all option values you might use
-			(array)get_site_option( 'plugin-name-options', array() ),
-			array(),
-		);
+      (array)get_site_option( 'plugin-name-options', array() ),
+      array(),
+    );
 
   }
 
@@ -323,6 +323,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
       $wp_options_name.'_section', // THe section above we want to display in.
       array(
         'name'              => 'number_value', // Should match the first arg of this function.
+        'label_for'         => 'number_value', // Should also match the first arg of this function - including this makes it output a label.
         'description'       => __('An optional argument containing a bit more information to display under the input box.', PLUGIN_NAME_TEXT_DOMAIN),
         'option-name'       => $wp_options_name, // Where we're going to store the data.
         'sanitize_callback' => 'intval', // How do we escape user data entered here? Other options include floatval, sanitize_text_field, sanitize_textarea_field, sanitize_url, sanitize_hex_color
@@ -340,9 +341,11 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
       $wp_options_name.'_section',
       array(
         'name'              => 'url_value',
+        'label_for'         => 'url_value',
         'option-name'       => $wp_options_name,
         'sanitize_callback' => 'sanitize_url',
         'required'          => 'required',
+        'placeholder'       => __('https://google.com/',PLUGIN_NAME_TEXT_DOMAIN),
       )
     );
     add_settings_field(
@@ -353,6 +356,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
       $wp_options_name.'_section',
       array(
         'name'              => 'select_field',
+        'label_for'         => 'select_field',
         'option-name'       => $wp_options_name,
         'sanitize_callback' => 'sanitize_text_field',
         'options'           => array(

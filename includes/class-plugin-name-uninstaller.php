@@ -42,9 +42,9 @@ class Plugin_Name_Uninstaller {
     delete_site_option('plugin-name-activated-version');
 
     /*
-		 * Delete our site options from the admin tool. Repeat next line for each option group created.
-		 */
-		delete_site_option('plugin-name-options');
+     * Delete our site options from the admin tool. Repeat next line for each option group created.
+     */
+    delete_site_option('plugin-name-options');
 
   }
 
