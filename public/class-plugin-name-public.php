@@ -24,24 +24,6 @@ namespace Plugin_Name;
 class Plugin_Name_Public {
 
   /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $plugin_name    The ID of this plugin.
-   */
-  private $plugin_name;
-
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $version    The current version of this plugin.
-   */
-  private $version;
-
-  /**
    * The user entered options of this plugin.
    *
    * @since    2.0.3
@@ -54,15 +36,10 @@ class Plugin_Name_Public {
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @param      string    $plugin_name       The name of the plugin.
-   * @param      string    $version    The version of this plugin.
    */
-  public function __construct( $plugin_name, $version ) {
+  public function __construct( ) {
 
-    $this->plugin_name = $plugin_name;
-    $this->version     = $version;
-
-    $this->options     = array_merge(
+    $this->options   = array_merge(
       // Repeat this next line for all option values you might use
       (array)get_site_option( 'plugin-name-options', array() ),
       array(),
@@ -88,7 +65,7 @@ class Plugin_Name_Public {
      * class.
      */
 
-    wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-public.css', array(), $this->version, 'all' );
+    wp_enqueue_style( 'plugin-name-public', plugin_dir_url( __FILE__ ) . 'css/plugin-name-public.css', array(), PLUGIN_NAME_VERSION, 'all' );
 
   }
 
@@ -111,7 +88,7 @@ class Plugin_Name_Public {
      * class.
      */
 
-    wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-public.js', array( 'jquery' ), $this->version, false );
+    wp_enqueue_script( 'plugin-name-public', plugin_dir_url( __FILE__ ) . 'js/plugin-name-public.js', array( 'jquery' ), PLUGIN_NAME_VERSION, false );
 
   }
 

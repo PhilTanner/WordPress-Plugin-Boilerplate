@@ -1,4 +1,13 @@
 # Plugin_Name Boilerplate changes
+## v2.0.4
+* Removed `$plugin_name` and `$plugin_version` from `Plugin_Name_Admin()` and `Plugin_Name_Public()` as they were unused & superfluous.
+  * Removed `Plugin_Name_Public::get_plugin_name()` and `Plugin_Name_Public::get_version()` functions as no longer required.
+* Changed `admin_notices` to only print messages to users with `manage_options` capabilities (Administrators).
+* Moved the content of `admin_page_display` into the `admin/partials/plugin-name-admin-display.php` file.
+* Corrected settings URL typo in `Plugin_Name_Admin::plugin_name_action_links()`.
+* Moved creation of settings_errors about automatic updates in the activator class for more logical location.
+* Corrected the naming of the `plugin-initialisation.sh` file inside itself to avoid recursion.
+
 ## v2.0.3
 * Changed plugin options property to protected to allow interaction with `Phil_Tanner_Admin()` class.
 * Included example `label_for` value in form fields to output labels for settings fields for better accessibility.

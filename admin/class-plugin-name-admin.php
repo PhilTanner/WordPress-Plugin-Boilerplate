@@ -25,24 +25,6 @@ require_once 'class-phil-tanner-admin.php';
 class Plugin_Name_Admin extends Phil_Tanner_Admin {
 
   /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $plugin_name    The ID of this plugin.
-   */
-  private $plugin_name;
-
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $version    The current version of this plugin.
-   */
-  private $version;
-
-  /**
    * The user entered options of this plugin.
    *
    * @since    2.0.3
@@ -55,15 +37,10 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @param      string    $plugin_name       The name of this plugin.
-   * @param      string    $version    The version of this plugin.
    */
-  public function __construct( $plugin_name, $version ) {
+  public function __construct( ) {
 
-    $this->plugin_name = $plugin_name;
-    $this->version = $version;
-
-    $this->options = array_merge(
+    $this->options   = array_merge(
       // Repeat this next line for all option values you might use
       (array)get_site_option( 'plugin-name-options', array() ),
       array(),
@@ -90,7 +67,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
      * class.
      */
 
-    wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-admin.css', array(), $this->version, 'all' );
+    wp_enqueue_style( 'plugin-name-admin', plugin_dir_url( __FILE__ ) . 'css/plugin-name-admin.css', array(), PLUGIN_NAME_VERSION, 'all' );
 
   }
 
@@ -124,7 +101,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
        false
      );
 
-    wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), $this->version, false );
+    wp_enqueue_script( 'plugin-name-admin', plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), PLUGIN_NAME_VERSION, false );
 
   }
 
@@ -164,10 +141,10 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
           );
         }
       }
+      // Display any error messages we've registered trying to update admin settings.
+      settings_errors( PLUGIN_NAME_TEXT_DOMAIN );
     }
 
-    // Display any error messages we've registered trying to update admin settings.
-    settings_errors( PLUGIN_NAME_TEXT_DOMAIN );
   }
 
   /**
@@ -196,7 +173,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
       __("Plugin Settings", PLUGIN_NAME_TEXT_DOMAIN), // Tab title text
       __("Plugin Settings", PLUGIN_NAME_TEXT_DOMAIN),  // Menu item text
       "manage_options", // Capability required to see link/access page (Admin: https://wordpress.org/support/article/roles-and-capabilities/#administrator)
-      "plugin-name-menu_admin", // Menu slug (unique name)
+      'plugin-name-menu_admin', // Menu slug (unique name)
       array( $this, "admin_page_display" ), // Function to be called when displaying content
       'dashicons-admin-settings', // https://developer.wordpress.org/resource/dashicons/#admin-settings
       72 // https://developer.wordpress.org/reference/functions/add_menu_page/#default-bottom-of-menu-structure
@@ -226,59 +203,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
   public function admin_page_display() {
     global $plugin_name_plugin_data;
 
-    echo '<div class="wrap plugin_name">';
-    echo '  <h1>' . $plugin_name_plugin_data['PluginName'] . '</h1>';
-    echo '  <h2>';
-    echo sprintf(
-      __("Version %s", PLUGIN_NAME_TEXT_DOMAIN),
-      get_option('plugin-name-activated-version', $plugin_name_plugin_data['Version'])
-    );
-
-    $git_branch = Phil_Tanner_Admin::get_git_branch();
-    $git_repo   = Phil_Tanner_Admin::get_git_repo_url();
-    $git_hash   = Phil_Tanner_Admin::get_git_commit_hash();
-    $git_date   = Phil_Tanner_Admin::get_git_commit_date();
-
-    echo ' <span style="font-size:80%">(';
-    if(
-      $git_branch
-      && $git_repo
-      && $git_hash
-      && $git_date
-    ){
-      echo sprintf(
-        __(
-          'Git Branch: <em>'.
-          '<a href="%s" target="_blank">%s<span class="dashicons-before dashicons-external"></span></a> '.
-          '(Commit: <a href="%s" target="_blank">#%s, %s<span class="dashicons-before dashicons-external"></span></a>)</em>, ',
-          PLUGIN_NAME_TEXT_DOMAIN
-        ),
-        $git_repo.'/tree/'.$git_branch,
-        $git_branch,
-        $git_repo.'/commit/'.$git_hash,
-        substr( $git_hash, 0, 8),
-        Phil_Tanner_Admin::print_wp_local_date_from( $git_date )
-      );
-    }
-
-    echo sprintf(
-      __('WordPress Environment: <em>%s</em>',PLUGIN_NAME_TEXT_DOMAIN),
-      WP_ENVIRONMENT_TYPE
-    );
-    echo ')</span>';
-    echo "</h2>";
-
-    if( current_user_can( "manage_options" ) ) {
-      echo '  <form method="post" action="options.php" id="plugin_name_admin_settings">';
-      settings_fields( 'plugin-name-options_group' );
-      do_settings_sections( 'plugin-name-options_fields' );
-      submit_button();
-      echo '  </form>';
-    } else {
-      echo '<p>'.__("You must be an administrator to edit these settings.", PLUGIN_NAME_TEXT_DOMAIN).'</p>';
-    }
-
-    echo '</div>';
+    require_once 'partials/plugin-name-admin-display.php';
   }
 
   /**
@@ -434,7 +359,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
       $settings_url = esc_url(
         add_query_arg(
           'page',
-          'plugin_name-menu_admin', // Note - this needs to match the Menu Slug in admin/class-plugin-name-admin.php->add_menu_links()
+          'plugin-name-menu_admin', // Note - this needs to match the Menu Slug in admin/class-plugin-name-admin.php->add_menu_links()
           admin_url( 'admin.php' )
         )
       );

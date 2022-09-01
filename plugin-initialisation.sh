@@ -31,10 +31,10 @@ then
   find . -iname "*plugin-name*" -exec bash -c 'mv "$1" "${1//plugin-name/'${lch}'}"' -- {} \;
 
   echo "Updating plugin variable names..."
-  files=$(grep -rl plugin_name * |grep -v rename.sh) && echo $files | xargs sed -i "s,plugin_name,${lcu},g"
-  files=$(grep -rl plugin-name * |grep -v rename.sh) && echo $files | xargs sed -i "s,plugin-name,${lch},g"
-  files=$(grep -rl Plugin_Name * |grep -v rename.sh) && echo $files | xargs sed -i "s,Plugin_Name,${tcu},g"
-  files=$(grep -rl PLUGIN_NAME_ * |grep -v rename.sh) && echo $files | xargs sed -i "s,PLUGIN_NAME_,${ucu}_,g"
+  files=$(grep -rl plugin_name * |grep -v plugin-initialisation.sh) && echo $files | xargs sed -i "s,plugin_name,${lcu},g"
+  files=$(grep -rl plugin-name * |grep -v plugin-initialisation.sh) && echo $files | xargs sed -i "s,plugin-name,${lch},g"
+  files=$(grep -rl Plugin_Name * |grep -v plugin-initialisation.sh) && echo $files | xargs sed -i "s,Plugin_Name,${tcu},g"
+  files=$(grep -rl PLUGIN_NAME_ * |grep -v plugin-initialisation.sh) && echo $files | xargs sed -i "s,PLUGIN_NAME_,${ucu}_,g"
 
   echo "Updating URLs in files..."
   # Not using something like the below, as that will touch every file, regardless

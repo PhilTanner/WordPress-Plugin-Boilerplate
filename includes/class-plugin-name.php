@@ -40,24 +40,6 @@ class Plugin_Name {
   protected $loader;
 
   /**
-   * The unique identifier of this plugin.
-   *
-   * @since    1.0.0
-   * @access   protected
-   * @var      string    $plugin_name    The string used to uniquely identify this plugin.
-   */
-  protected $plugin_name;
-
-  /**
-   * The current version of the plugin.
-   *
-   * @since    1.0.0
-   * @access   protected
-   * @var      string    $version    The current version of the plugin.
-   */
-  protected $version;
-
-  /**
    * Define the core functionality of the plugin.
    *
    * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -67,12 +49,6 @@ class Plugin_Name {
    * @since    1.0.0
    */
   public function __construct() {
-    if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-      $this->version = PLUGIN_NAME_VERSION;
-    } else {
-      $this->version = '1.0.0';
-    }
-    $this->plugin_name = PLUGIN_NAME_TEXT_DOMAIN;
 
     $this->load_dependencies();
     $this->set_locale();
@@ -162,7 +138,7 @@ class Plugin_Name {
    */
   private function define_admin_hooks() {
 
-    $plugin_admin = new Plugin_Name_Admin( $this->get_plugin_name(), $this->get_version() );
+    $plugin_admin = new Plugin_Name_Admin();
 
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_styles' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin,     'enqueue_scripts' );
@@ -190,7 +166,7 @@ class Plugin_Name {
    */
   private function define_public_hooks() {
 
-    $plugin_public = new Plugin_Name_Public( $this->get_plugin_name(), $this->get_version() );
+    $plugin_public = new Plugin_Name_Public();
 
     $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
     $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -207,17 +183,6 @@ class Plugin_Name {
   }
 
   /**
-   * The name of the plugin used to uniquely identify it within the context of
-   * WordPress and to define internationalization functionality.
-   *
-   * @since     1.0.0
-   * @return    string    The name of the plugin.
-   */
-  public function get_plugin_name() {
-    return $this->plugin_name;
-  }
-
-  /**
    * The reference to the class that orchestrates the hooks with the plugin.
    *
    * @since     1.0.0
@@ -225,16 +190,6 @@ class Plugin_Name {
    */
   public function get_loader() {
     return $this->loader;
-  }
-
-  /**
-   * Retrieve the version number of the plugin.
-   *
-   * @since     1.0.0
-   * @return    string    The version number of the plugin.
-   */
-  public function get_version() {
-    return $this->version;
   }
 
 }

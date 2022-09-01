@@ -43,18 +43,12 @@ class Plugin_Name_Activator {
        *
        * Remember, if you want to only do some things if migrating from specific
        * versions, you can do some things like:
-       * if( $installed_version && version_compare( $installed_version, "2.0.1", "<" ) ){
+       * if( version_compare( $installed_version, "2.0.1", "<" ) ){
        *   // Do the things that need to happen if previous version was less than 2.0.1
        * }
        */
 
       update_site_option( 'plugin-name-activated-version', PLUGIN_NAME_VERSION );
-      add_settings_error(
-        PLUGIN_NAME_TEXT_DOMAIN, // Slug of the setting which we're generating the error for
-        'plugin-updated', // slug name of the code of this particular error
-        $plugin_name_plugin_data['PluginName'] .": ". sprintf( __('Plugin automatically updated to version %s.',PLUGIN_NAME_TEXT_DOMAIN), PLUGIN_NAME_VERSION ),
-        'success' // error, success, warning, or info. Default error.
-      );
     }
 
   }
@@ -75,11 +69,17 @@ class Plugin_Name_Activator {
     if( current_user_can( "manage_options" ) ) {
 
       // Grab our currently installed version from the DB.
-      $installed_version = get_site_option('plugin-name-activated-version', get_site_option('plugin-name-activated_version', 0) );
+      $installed_version = get_site_option('plugin-name-activated-version', 0 );
 
       // Our activated version isn't the same as the version we're looking at, we should re-activate.
       if( version_compare( $installed_version, PLUGIN_NAME_VERSION, "<" ) ){
         self::activate();
+        add_settings_error(
+          PLUGIN_NAME_TEXT_DOMAIN, // Slug of the setting which we're generating the error for
+          'plugin-updated', // slug name of the code of this particular error
+          $plugin_name_plugin_data['PluginName'] .": ". sprintf( __('Automatically updated to version %s.',PLUGIN_NAME_TEXT_DOMAIN), PLUGIN_NAME_VERSION ),
+          'success' // error, success, warning, or info. Default error.
+        );
       }
     }
   }
