@@ -326,8 +326,8 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
         $links_array[0] .= ' ('.sprintf(
           __(
             'Git Branch: '.
-            '<a href="%s" target="_blank">%s<span class="dashicons-before dashicons-external"></span></a> '.
-            '(Commit: <a href="%s" target="_blank">#%s, %s<span class="dashicons-before dashicons-external"></span></a>)',
+            '<a href="%s" target="_blank">%s</a> '.
+            '(Commit: <a href="%s" target="_blank">#%s, %s</a>)',
             PLUGIN_NAME_TEXT_DOMAIN
           ),
           $git_repo.'/tree/'.$git_branch,

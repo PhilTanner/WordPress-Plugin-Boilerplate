@@ -20,13 +20,14 @@ namespace Plugin_Name;
    __("Version %s", PLUGIN_NAME_TEXT_DOMAIN),
    get_option('plugin-name-activated-version', $plugin_name_plugin_data['Version'])
   );
+  echo '</h2>';
 
   $git_branch = Phil_Tanner_Admin::get_git_branch();
   $git_repo   = Phil_Tanner_Admin::get_git_repo_url();
   $git_hash   = Phil_Tanner_Admin::get_git_commit_hash();
   $git_date   = Phil_Tanner_Admin::get_git_commit_date();
 
-  echo ' <span style="font-size:80%">(';
+  echo ' <dl>';
   if(
    $git_branch
    && $git_repo
@@ -35,9 +36,12 @@ namespace Plugin_Name;
   ){
    echo sprintf(
      __(
-       'Git Branch: <em>'.
-       '<a href="%s" target="_blank">%s<span class="dashicons-before dashicons-external"></span></a> '.
-       '(Commit: <a href="%s" target="_blank">#%s, %s<span class="dashicons-before dashicons-external"></span></a>)</em>, ',
+       '<dt>Git Branch:</dt>'.
+       '<dd><a href="%s" target="_blank">%s</a></dd>'.
+       '<dt>Commit:</dt>'.
+       '<dd><a href="%s" target="_blank">#%s</a></dd>'.
+       '<dt>Commit date:</dt>'.
+       '<dd>%s</dd>',
        PLUGIN_NAME_TEXT_DOMAIN
      ),
      $git_repo.'/tree/'.$git_branch,
@@ -49,11 +53,21 @@ namespace Plugin_Name;
   }
 
   echo sprintf(
-   __('WordPress Environment: <em>%s</em>',PLUGIN_NAME_TEXT_DOMAIN),
-   WP_ENVIRONMENT_TYPE
+    __(
+      '<dt>WordPress Environment</dt>'.
+      '<dd>%s</dd>',
+      PLUGIN_NAME_TEXT_DOMAIN
+    ),
+    (
+      defined( "WP_ENVIRONMENT_TYPE" ) ?
+      WP_ENVIRONMENT_TYPE :
+      '<em>'.__(
+        'Undefined',
+        PLUGIN_NAME_TEXT_DOMAIN
+      ).'</em>' 
+    )
   );
-  echo ')</span>';
-  echo "</h2>";
+  echo "</dl>";
 
   if( current_user_can( "manage_options" ) ) {
    echo '  <form method="post" action="options.php" id="plugin_name_admin_settings">';

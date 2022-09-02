@@ -1,4 +1,11 @@
 # Plugin_Name Boilerplate changes
+## v2.0.5
+### UI improvements
+* External links (a href tags with a `target="_blank"` argument) now automatically tagged with external link image.
+* Tweaks to required admin fields marked as required, changing colours from `red` to `crimson`.
+* Display of Github information in `admin/partials/plugin-name-admin-display.php` moved into dl/dt/dd tags for semantic markup.
+* Checking of `WP_ENVIRONMENT_TYPE` before display (should always be defined anyway).
+
 ## v2.0.4
 * Removed `$plugin_name` and `$plugin_version` from `Plugin_Name_Admin()` and `Plugin_Name_Public()` as they were unused & superfluous.
   * Removed `Plugin_Name_Public::get_plugin_name()` and `Plugin_Name_Public::get_version()` functions as no longer required.

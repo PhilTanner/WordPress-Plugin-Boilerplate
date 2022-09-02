@@ -10,24 +10,39 @@
 
 /* Style our required input/select/textarea/whatever fields themselves so they're obvious */
 div.wrap.plugin_name form [required] {
-  border-color: red;
-  color:maroon;
+  border-color: crimson;
+  color: maroon;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.25);
   background-color: peachpuff;
-  font-weight:bold;
+  font-weight: bold;
 }
 /* Make the preceeding TH element stand out if there's a required form field in that row */
 div.wrap.plugin_name form tr:has([required]) th,
 div.wrap.plugin_name form tr:has([required]) th label {
-  color: red;
+  color: crimson;
   font-weight: bolder;
-  font-style:italic;
+  font-style: italic;
+  text-shadow: 2px 2px 2px rgb(0, 0, 0, 0.125);
 }
 /* Drop an asterisk after the input field as well */
 div.wrap.plugin_name form tr:has([required]) th::before,
 div.wrap.plugin_name form tr:has([required]) td::before {
   content: '* ';
   font-weight: bold;
-  color:red;
+  color:crimson;
   vertical-align: top;
+  text-shadow: 2px 2px 2px rgb(0, 0, 0, 0.125);
+}
+/* Highlight our external links as being external */
+body.wp-admin.plugins-php table.plugins tr[data-slug='plugin-name'] a[target="_blank"]::after,
+div.wrap.plugin_name a[target="_blank"]::after {
+  width: 1.5em;
+  height: 1.5em;
+  background-size: 2em; /* There's some whitespace padding around the image we don't really want, so simply scale it larger than viewport */
+  background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8cGF0aCBkPSJtNTUzLjU5IDE5OC41djEzOC4xM2wtNTUuMTEzLTU1LjExMy0xNjEuOTUgMTYxLjk1LTI3LjkwMi0yNy45MDIgMTYxLjk1LTE2MS45NS01NS4xMTMtNTUuMTEzem0tNTkuMTk1IDMzNS40NWgtMjc2LjI2di0yNzYuMjVoMTU3Ljg2djM5LjQ2NWgtMTE4LjM5djE5Ny4zMmgxOTcuMzJ2LTExOC4zOWgzOS40Njl6IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==");
+  background-position: center;
+  vertical-align: top;
+  content: " ";
+  display: inline-block;
+  opacity: 0.66;
 }
