@@ -33,6 +33,24 @@ div.wrap.plugin_name form tr:has([required]) td::before {
   vertical-align: top;
   text-shadow: 2px 2px 2px rgb(0, 0, 0, 0.125);
 }
+/* Make our URL inputs  */
+div.wrap.plugin_name form input[type="url"]{
+  width:30em;
+}
+div.wrap.plugin_name form input[type="text"],
+div.wrap.plugin_name form input[type="email"],
+div.wrap.plugin_name form input[type="password"],
+div.wrap.plugin_name form input[type="range"],
+div.wrap.plugin_name form textarea {
+  width:22em;
+}
+div.wrap.plugin_name form textarea {
+  height: 4em;
+}
+div.wrap.plugin_name form input[type="number"] {
+  min-width: 4em;
+}
+
 /* Highlight our external links as being external */
 body.wp-admin.plugins-php table.plugins tr[data-slug='plugin-name'] a[target="_blank"]::after,
 div.wrap.plugin_name a[target="_blank"]::after {

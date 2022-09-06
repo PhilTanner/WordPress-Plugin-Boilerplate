@@ -1,4 +1,28 @@
 # Plugin_Name Boilerplate changes
+
+## v2.0.6
+* Bumped required WordPress version in README.txt up to 5.5.1 (required for use of [`wp_get_environment_type()`](https://developer.wordpress.org/reference/functions/wp_get_environment_type/)
+* Increased `Phil_Tanner_Admin` version to v1.0.6
+  * Removed incorrectly integered `max` argument to input fields.
+* Increased `Phil_Tanner_Admin` version to v1.1.0
+  * Escaping input IDs using `sanitize_key()` instead of just outputting `$args['name']` directly.
+  * Escaping input names using `sanitize_key()` instead of `esc_attr()`.
+  * Escaping input description IDs using `sanitize_html_class()` instead of `esc_attr()` against the `args['name']` value for better alignment to DOM ID naming conventions.
+  * Addition of new form input methods (SemVer mid-version bump):
+    * `print_radio_inputs()`
+    * `print_email_input()`
+    * `print_date_input()`
+    * `print_password_input()`
+    * `print_datetime_input()`
+    * `print_month_and_year_input()`
+    * `print_week_input()`
+    * `print_range_input()`
+    * `print_tel_input()`
+    * `print_hidden_input()`
+  * Stopped `print_number_input()` using `%f` for output of numbers, as it was padding trailing zeros. Now just parses value as string put thru `(float)` typecast.
+
+
+
 ## v2.0.5
 ### UI improvements
 * External links (a href tags with a `target="_blank"` argument) now automatically tagged with external link image.

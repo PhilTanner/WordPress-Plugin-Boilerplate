@@ -22,7 +22,7 @@ class Phil_Tanner_Admin {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version = "1.0.5";
+  private $version = "1.1.0";
 
 
   /**
@@ -44,7 +44,7 @@ class Phil_Tanner_Admin {
       throw new \Exception(__('Missing required "name" argument required for saving info.','Phil_Tanner_Admin'));
     }
     // We're always going to include the ID & name attributes
-    $additionalargs = ' id="'.$args['name'].'"';
+    $additionalargs = ' id="'.sanitize_key($args['name']).'"'; // Note this sanitisation needs to match that in print_radio_inputs()
     $is_multiple = false;
     foreach( $args as $name => $val ){
       switch( $name ){
@@ -80,7 +80,6 @@ class Phil_Tanner_Admin {
         // These are integer arguments.
         case "size":
         case "maxlength":
-        case "max":
           $additionalargs .= ' '.esc_attr($name).'="'.(int)$val.'"';
           break;
         // These are URLs, so they need a different value escape.
@@ -93,9 +92,60 @@ class Phil_Tanner_Admin {
       }
 
     }
-    $additionalargs .= ' name="'.esc_attr($args['option-name']).'['.esc_attr($args['name']).']'.($is_multiple?'[]':'').'"';
+    $additionalargs .= ' name="'.sanitize_key($args['option-name']).'['.sanitize_key($args['name']).']'.($is_multiple?'[]':'').'"';
     return $additionalargs;
   }
+
+  /**
+   * Outputs the description argument under form fields output.
+   *
+   * @since    1.1.0
+   */
+  public function print_input_description( $args ){
+    if(
+      array_key_exists( 'description', $args )
+      && trim($args['description'])
+    ){
+      echo sprintf(
+        '<p class="description" id="%s-description">%s</p>',
+        sanitize_html_class($args['name']),
+        $args['description']
+      );
+    }
+  }
+
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of telephone numbers.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_tel_input( $args ){
+    echo sprintf(
+      '<input type="tel" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+
+  /**
+   * Outputs a standardised WP admin formfield for hidden form field. Cannot imagine a use case, but included for completeness.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_hidden_input( $args ){
+    echo sprintf(
+      '<input type="hidden" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
 
   /**
    * Outputs a standardised WP admin formfield for entry of boolean values.
@@ -107,73 +157,9 @@ class Phil_Tanner_Admin {
     echo sprintf(
       '<input type="checkbox" value="1" %s %s />',
       $this->get_additional_args_for_inputs( $args ),
-      (isset( $this->options[$args['name']] ) ? 'checked="checked"' : '')
-
+      (isset( $this->options[sanitize_key($args['name'])] ) ? 'checked' : '')
     );
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
-  }
-
-  /**
-   * Outputs a standardised WP admin formfield for entry of text strings.
-   * Used in argument #3 of add_settings_field().
-   *
-   * @since    1.0.0
-   */
-  public function print_text_input( $args ){
-    if( !array_key_exists( 'style', $args ) ){
-      $args['style'] = 'width:22em;';
-    }
-    echo sprintf(
-      '<input type="text" value="%s" %s />',
-      (isset( $this->options[$args['name']] ) ? esc_attr( $this->options[$args['name']]) : ''),
-      $this->get_additional_args_for_inputs( $args ),
-    );
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
-  }
-
-  /**
-   * Outputs a standardised WP admin formfield for entry of text strings.
-   * Used in argument #3 of add_settings_field().
-   *
-   * @since    1.0.0
-   */
-  public function print_textarea_input( $args ){
-    if( !array_key_exists( 'style', $args ) ){
-      $args['style'] = 'width:22em; height:4em;';
-    }
-    echo sprintf(
-      '<textarea %s>%s</textarea>',
-      $this->get_additional_args_for_inputs( $args ),
-      (isset( $this->options[$args['name']] ) ? esc_textarea( $this->options[$args['name']]) : '')
-    );
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
+    $this->print_input_description( $args );
   }
 
   /**
@@ -185,19 +171,10 @@ class Phil_Tanner_Admin {
   public function print_color_input( $args ){
     echo sprintf(
       '<input type="color" value="%s" %s />',
-      (isset( $this->options[$args['name']] ) ? esc_attr( $this->options[$args['name']]) : ''),
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
       $this->get_additional_args_for_inputs( $args ),
     );
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
+    $this->print_input_description( $args );
   }
 
   /**
@@ -207,24 +184,27 @@ class Phil_Tanner_Admin {
    * @since    1.0.0
    */
   public function print_number_input( $args ){
-    if( !array_key_exists( 'style', $args ) ){
-      $args['style'] = 'min-width:4em;';
-    }
-    if( !array_key_exists( 'step', $args ) ){
-      $args['step'] = '1';
-    }
     echo sprintf(
-      '<input type="number" value="%f" %s />',
-      (isset( $this->options[$args['name']] ) ? (float)$this->options[$args['name']] : '0'),
+      '<input type="number" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? (float)$this->options[sanitize_key($args['name'])] : '0'),
       $this->get_additional_args_for_inputs( $args ),
     );
-    if( array_key_exists( 'description', $args ) ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of a slider value.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_range_input( $args ){
+    echo sprintf(
+      '<input type="range" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? (float)$this->options[sanitize_key($args['name'])] : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
   }
 
   /**
@@ -234,26 +214,133 @@ class Phil_Tanner_Admin {
    * @since    1.0.0
    */
   public function print_url_input( $args ){
-    if( !array_key_exists( 'style', $args ) ){
-      $args['style'] = 'width:30em;';
-    }
     echo sprintf(
       '<input type="url" value="%s" %s />',
-      (isset( $this->options[$args['name']] ) ? esc_attr( $this->options[$args['name']]) : ''),
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
       $this->get_additional_args_for_inputs( $args ),
     );
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
-      echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
-      );
-    }
+    $this->print_input_description( $args );
   }
 
+  /**
+   * Outputs a standardised WP admin formfield for entry of email addresses.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_email_input( $args ){
+    echo sprintf(
+      '<input type="email" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of password fields.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_password_input( $args ){
+    echo sprintf(
+      '<input type="password" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of text strings.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.0.0
+   */
+  public function print_text_input( $args ){
+    echo sprintf(
+      '<input type="text" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of text strings.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.0.0
+   */
+  public function print_textarea_input( $args ){
+    echo sprintf(
+      '<textarea %s>%s</textarea>',
+      $this->get_additional_args_for_inputs( $args ),
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_textarea( $this->options[sanitize_key($args['name'])]) : '')
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of date values.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_date_input( $args ){
+    echo sprintf(
+      '<input type="date" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of date time entries (without timezones).
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_datetime_input( $args ){
+    echo sprintf(
+      '<input type="datetime-local" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of month and year.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_month_and_year_input( $args ){
+    echo sprintf(
+      '<input type="month" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry of a week and year.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_week_input( $args ){
+    echo sprintf(
+      '<input type="week" value="%s" %s />',
+      (isset( $this->options[sanitize_key($args['name'])] ) ? esc_attr( $this->options[sanitize_key($args['name'])]) : ''),
+      $this->get_additional_args_for_inputs( $args ),
+    );
+    $this->print_input_description( $args );
+  }
 
   /**
    * Outputs a standardised WP admin formfield for entry using a select input.
@@ -274,13 +361,13 @@ class Phil_Tanner_Admin {
         '<option value="%s" %s>%s</option>',
         esc_attr($option['value']),
         (
-          isset( $this->options[$args['name']] )
+          isset( $this->options[sanitize_key($args['name'])] )
           && (
             (
-              is_array( $this->options[$args['name']] )
-              && array_search( $option['value'], $this->options[$args['name']] ) !== false
+              is_array( $this->options[sanitize_key($args['name'])] )
+              && array_search( $option['value'], $this->options[sanitize_key($args['name'])] ) !== false
             )
-            || $this->options[$args['name']] == $option['value']
+            || $this->options[sanitize_key($args['name'])] == $option['value']
           ) ?
           'selected="selected"' :
           ''
@@ -290,17 +377,49 @@ class Phil_Tanner_Admin {
     }
 
     echo '</select>';
-    if(
-      array_key_exists( 'description', $args )
-      && trim($args['description'])
-    ){
+    $this->print_input_description( $args );
+  }
+
+  /**
+   * Outputs a standardised WP admin formfield for entry using a set of radio
+   * input buttons.
+   * Note: This requires an argument of "options" as an array of options to
+   * output, each with a name and a value pair.
+   * Used in argument #3 of add_settings_field().
+   *
+   * @since    1.1.0
+   */
+  public function print_radio_inputs( $args ){
+
+    $additionalargs = $this->get_additional_args_for_inputs( $args );
+    // Each Radio button needs its own ID argument, and IDs need to be unique.
+    // So we're going to strip it from the start of our arguments list so we can
+    // add it back.
+    $additionalargs = str_replace(' id="'.sanitize_key($args['name']).'"', '', $additionalargs);
+
+    $n = 0; // throwaway counter to keep track of IDs
+    foreach( $args['options'] as $option ){
+      $n++;
+      $id = sanitize_key($args['name']) . "-". $n; // This is the same way we're sanitising IDs in get_additional_args_for_inputs()
       echo sprintf(
-        '<p class="description" id="%s-description">%s</p>',
-        esc_attr($args['name']),
-        $args['description']
+        '<input type="radio" value="%s" %s id="'.$id.'" />',
+        esc_attr($option['value']),
+        (
+          isset( $this->options[sanitize_key($args['name'])] )
+          && $this->options[sanitize_key($args['name'])] == $option['value']
+          ?
+          'checked'.$additionalargs :
+          $additionalargs
+        )
+      );
+      echo sprintf(
+        '<label for="'.$id.'">%s</label>',
+        esc_html($option['name'])
       );
     }
+    $this->print_input_description( $args );
   }
+
 
   /**
    * Register and add settings
@@ -466,6 +585,5 @@ class Phil_Tanner_Admin {
     }
 
   }
-
 
 }

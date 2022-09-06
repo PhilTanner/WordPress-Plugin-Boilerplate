@@ -243,7 +243,7 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
     add_settings_field(
       'number_value', // Field name that we'll use to access this value.
       __('Enter a number between 1 and 10 (inclusive)',PLUGIN_NAME_TEXT_DOMAIN),
-      array( $this, 'print_number_input' ), // What function will output the input field. These are stored in the Phil_Tanner_Admin() class.
+      array( $this, 'print_number_input' ), // What function will output the input field. These are stored in the Phil_Tanner_Admin() class, and include print_checkbox_input(), print_text_input(), print_textarea_input(), print_color_input(), print_number_input(), print_url_input(), print_select_input(), print_radio_inputs(), print_email_input()
       $wp_options_name.'_fields', // Which bit to output into when you call do_settings_sections() function.
       $wp_options_name.'_section', // THe section above we want to display in.
       array(
@@ -251,10 +251,10 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
         'label_for'         => 'number_value', // Should also match the first arg of this function - including this makes it output a label.
         'description'       => __('An optional argument containing a bit more information to display under the input box.', PLUGIN_NAME_TEXT_DOMAIN),
         'option-name'       => $wp_options_name, // Where we're going to store the data.
-        'sanitize_callback' => 'intval', // How do we escape user data entered here? Other options include floatval, sanitize_text_field, sanitize_textarea_field, sanitize_url, sanitize_hex_color
+        'sanitize_callback' => 'intval', // How do we escape user data entered here? Other options include floatval and those at https://developer.wordpress.org/plugins/security/securing-input/
         'min'               => 1,
         'max'               => 10,
-        'step'              => 1,
+        'step'              => 0.0000001,
         // Any other arguments you want to pass to the input field HTML go here.
       )
     );
@@ -291,6 +291,27 @@ class Plugin_Name_Admin extends Phil_Tanner_Admin {
                                 array( 'value' => 'west',  'name' => __('West',  PLUGIN_NAME_TEXT_DOMAIN) ),
                               ),
         'multiple'          => 'multiple', // include this to pick more than one select item.
+      )
+    );
+
+    add_settings_field(
+      'radio_field',
+      __('Pick a direction',PLUGIN_NAME_TEXT_DOMAIN),
+      array( $this, 'print_radio_inputs' ), // Note pluralisation
+      $wp_options_name.'_fields',
+      $wp_options_name.'_section',
+      array(
+        'name'              => 'radio_field',
+        //'label_for'         => 'radio_field',
+        'option-name'       => $wp_options_name,
+        'sanitize_callback' => 'sanitize_text_field',
+        'options'           => array(
+                                array( 'value' => 'north', 'name' => __('North', PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'east',  'name' => __('East',  PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'south', 'name' => __('South', PLUGIN_NAME_TEXT_DOMAIN) ),
+                                array( 'value' => 'west',  'name' => __('West',  PLUGIN_NAME_TEXT_DOMAIN) ),
+                              ),
+        'required'          => 'required',
       )
     );
   }
