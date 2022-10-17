@@ -1,5 +1,12 @@
 # Plugin_Name Boilerplate changes
 
+## v2.0.7
+* Increased `Phil_Tanner_Admin` version to v1.1.1
+  * Added a link to more info on sanitizing features in commented block example.
+  * Escaping input names using `sanitize_key()` instead of `esc_attr()`.
+  * Stopped case sensitive checking of additional argument values in <input> output functions.
+
+
 ## v2.0.6
 * Bumped required WordPress version in README.txt up to 5.5.1 (required for use of [`wp_get_environment_type()`](https://developer.wordpress.org/reference/functions/wp_get_environment_type/)
 * Increased `Phil_Tanner_Admin` version to v1.0.6

@@ -22,7 +22,7 @@ class Phil_Tanner_Admin {
    * @access   private
    * @var      string    $version    The current version of this plugin.
    */
-  private $version = "1.1.0";
+  private $version = "1.1.1";
 
 
   /**
@@ -47,6 +47,7 @@ class Phil_Tanner_Admin {
     $additionalargs = ' id="'.sanitize_key($args['name']).'"'; // Note this sanitisation needs to match that in print_radio_inputs()
     $is_multiple = false;
     foreach( $args as $name => $val ){
+      $name = mb_strtolower($name);
       switch( $name ){
         // Ignore these fields
         case "description": // Description is special & output as a <P> below.
@@ -461,7 +462,7 @@ class Phil_Tanner_Admin {
         'name'              => 'plugin-name-output-fields', // Should match field ID, saved as named array value in `plugin-name-options` value
         'description'       => __('Pick a number between 1 and 10 inclusive.', PLUGIN_NAME_TEXT_DOMAIN),
         'option-name'       => 'plugin-name-options', // Option name (saved as into in wp_options table)
-        'sanitize_callback' => 'intval' // Sanitizing function to clean the input text,
+        'sanitize_callback' => 'intval' // Sanitizing function to clean the input text - for more, see https://developer.wordpress.org/plugins/security/securing-input/
         'min'               => 1,
         'max'               => 10,
       )
